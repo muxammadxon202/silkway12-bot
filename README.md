@@ -1,6 +1,6 @@
 # Silkway Bot Backend
 
-Бэкенд для сайта [Silkway Web Company](https://github.com/muxammadxon202/silkway-web-company).
+Бэкенд для сайта [Silkway Web Company](https://github.com/muxammadxon202/silkway12).
 Принимает заявки с сайта (`POST /api/orders`), сохраняет их в PostgreSQL и
 пересылает админу в Telegram. Бот и API работают в одном процессе.
 
@@ -28,7 +28,7 @@
 ## Запуск на VPS (Docker)
 
 ```bash
-git clone <этот-репозиторий> silkway-bot && cd silkway-bot
+git clone <этот-репозиторий> silkway12-bot && cd silkway12-bot
 cp .env.example .env
 nano .env          # впиши BOT_TOKEN, ALLOWED_ORIGINS (домен сайта)
 docker compose up -d --build
