@@ -1,0 +1,8 @@
+# Скрипты и конфиги, которые исполняются на Linux-сервере, всегда с LF —
+# иначе bash/Caddy спотыкаются о CR (\r) при клоне на VPS с Windows-репозитория.
+*.sh    text eol=lf
+Dockerfile text eol=lf
+Caddyfile  text eol=lf
+*.yml   text eol=lf
+*.py    text eol=lf
+.env.example text eol=lf
