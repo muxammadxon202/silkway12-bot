@@ -1,0 +1,7 @@
+# Обратный прокси с автоматическим HTTPS (Let's Encrypt).
+# Caddy сам получит и продлит сертификат для API_DOMAIN.
+# Домен берётся из переменной окружения (см. docker-compose.yml → caddy).
+{$API_DOMAIN} {
+	encode gzip
+	reverse_proxy app:8000
+}

@@ -24,8 +24,27 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    # порт наружу НЕ открываем — доступ только через Caddy (TLS)
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "80:80"
+      - "443:443"
+    environment:
+      # поддомен API; A-запись должна указывать на IP этого сервера
+      API_DOMAIN: ${API_DOMAIN:-api.silkway12.uz}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
 
 volumes:
   pgdata:
+  caddy_data:
+  caddy_config:
