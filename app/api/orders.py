@@ -44,4 +44,10 @@ async def create_order(request: Request, data: OrderIn) -> OrderOut:
         # заявка уже сохранена — сбой уведомления не должен ронять ответ сайту
         log.exception("failed to notify admin about order #%s", order.id)
 
-    return OrderOut(ok=True, id=order.id, price=order.price, days=order.days)
+    return OrderOut(
+        ok=True,
+        id=order.id,
+        price=order.price,
+        days=order.days,
+        days_text=r["days_text"],
+    )

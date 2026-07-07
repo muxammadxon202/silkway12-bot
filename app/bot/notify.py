@@ -1,6 +1,7 @@
 import html
 
 from ..db.models import Order
+from ..pricing import days_display
 from .instance import bot
 from .state import get_admin_id
 
@@ -17,7 +18,7 @@ def format_order(o: Order) -> str:
     if o.urgent:
         parts.append("⚡ Срочно: да")
     price = f"{o.price:,}".replace(",", " ")
-    parts.append(f"Расчёт: <b>{price}</b> сум · срок: {o.days} дн.")
+    parts.append(f"Расчёт: <b>{price}</b> сум · срок: {days_display(o.days, o.urgent)}")
     if o.contact:
         parts.append(f"Контакт: {html.escape(o.contact)}")
     parts.append(f"<i>#{o.id}</i>")

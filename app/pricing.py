@@ -71,6 +71,33 @@ SERVICES = {
 }
 
 
+def day_word(n: int) -> str:
+    """Русское склонение «день/дня/дней». Зеркало dayWord() из js/main.js."""
+    m10, m100 = n % 10, n % 100
+    if m10 == 1 and m100 != 11:
+        return "день"
+    if 2 <= m10 <= 4 and (m100 < 10 or m100 >= 20):
+        return "дня"
+    return "дней"
+
+
+def days_display(days: int, urgent: bool) -> str:
+    """Человекочитаемый срок. Зеркало urgentText()/dayWord() из js/main.js.
+
+    days тут — базовая инженерная оценка. При «срочно» показываем сокращённый
+    диапазон ровно как на сайте, чтобы админ видел то же обещание, что и клиент.
+    """
+    if not urgent:
+        return f"{days} {day_word(days)}"
+    if days <= 2:
+        return "12 часов"
+    if days <= 4:
+        return "1–2 дня"
+    lo = math.ceil(days * 0.3)
+    hi = math.ceil(days * 0.5)
+    return f"{lo}–{hi} {day_word(hi)}"
+
+
 def calc(service: str, options: list[str], urgent: bool) -> dict:
     """Пересчёт заявки на сервере. Повторяет логику calc() из js/main.js."""
     svc = SERVICES[service]
@@ -87,5 +114,6 @@ def calc(service: str, options: list[str], urgent: bool) -> dict:
         "service_name": svc["name"],
         "price": price,
         "days": days,
+        "days_text": days_display(days, urgent),
         "chosen": chosen,
     }

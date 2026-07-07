@@ -35,3 +35,4 @@ class OrderOut(BaseModel):
     id: int | None = None
     price: int
     days: int
+    days_text: str = ""
