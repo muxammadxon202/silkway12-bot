@@ -32,6 +32,7 @@ async def create_order(request: Request, data: OrderIn) -> OrderOut:
         price=r["price"],
         days=r["days"],
         contact=data.contact,
+        email=data.email,
     )
     async with SessionLocal() as s:
         s.add(order)

@@ -21,6 +21,8 @@ def format_order(o: Order) -> str:
     parts.append(f"Расчёт: <b>{price}</b> сум · срок: {days_display(o.days, o.urgent)}")
     if o.contact:
         parts.append(f"Контакт: {html.escape(o.contact)}")
+    if o.email:
+        parts.append(f"Email: {html.escape(o.email)}")
     parts.append(f"<i>#{o.id}</i>")
     return "\n".join(parts)
 
