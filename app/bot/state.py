@@ -1,29 +1,12 @@
 from ..config import settings
-from ..db.models import BotState
-from ..db.session import SessionLocal
 
 
-async def get_admin_id() -> int | None:
-    """ID админа: приоритет — из .env, иначе тот, кто первым сделал /start."""
-    if settings.admin_id:
-        return settings.admin_id
-    async with SessionLocal() as s:
-        st = await s.get(BotState, 1)
-        return st.admin_chat_id if st else None
+def get_admin_id() -> int:
+    """ID админа задаётся только через ADMIN_ID в .env — обязателен на старте.
 
-
-async def set_admin_id(chat_id: int) -> bool:
-    """Назначить админа, если ещё не назначен. True — если назначен впервые."""
-    if settings.admin_id:
-        return False
-    async with SessionLocal() as s:
-        st = await s.get(BotState, 1)
-        if st is None:
-            s.add(BotState(id=1, admin_chat_id=chat_id))
-            await s.commit()
-            return True
-        if st.admin_chat_id is None:
-            st.admin_chat_id = chat_id
-            await s.commit()
-            return True
-        return False
+    Раньше здесь была логика «первый написавший /start становится админом»:
+    это открывало окно, в котором чужой человек мог перехватить все заявки
+    с сайта (телефоны, email, суммы) — от старта контейнера до того момента,
+    пока настоящий владелец не напишет боту первым. Убрано целиком.
+    """
+    return settings.admin_id

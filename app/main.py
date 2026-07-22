@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
     await bot.delete_webhook(drop_pending_updates=True)
     # polling бота крутится в фоне рядом с API-сервером
     polling = asyncio.create_task(dp.start_polling(bot, handle_signals=False))
-    log.info("Bot polling started. Отправь боту /start, чтобы стать админом.")
+    log.info("Bot polling started. Admin chat id: %s", settings.admin_id)
     try:
         yield
     finally:
@@ -39,7 +39,13 @@ async def lifespan(app: FastAPI):
         await bot.session.close()
 
 
-app = FastAPI(title="Silkway Bot Backend", lifespan=lifespan)
+app = FastAPI(
+    title="Silkway Bot Backend",
+    lifespan=lifespan,
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
+)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 

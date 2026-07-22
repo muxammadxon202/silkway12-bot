@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: silkway
-      POSTGRES_PASSWORD: silkway
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: silkway
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -20,7 +20,7 @@ services:
     env_file: .env
     environment:
       # внутри compose-сети хост БД — это имя сервиса "db"
-      DATABASE_URL: postgresql+asyncpg://silkway:silkway@db:5432/silkway
+      DATABASE_URL: postgresql+asyncpg://silkway:${POSTGRES_PASSWORD}@db:5432/silkway
     depends_on:
       db:
         condition: service_healthy

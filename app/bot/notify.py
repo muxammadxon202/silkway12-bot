@@ -28,7 +28,4 @@ def format_order(o: Order) -> str:
 
 
 async def notify_admin(order: Order) -> None:
-    admin = await get_admin_id()
-    if admin is None:
-        return
-    await bot.send_message(admin, format_order(order))
+    await bot.send_message(get_admin_id(), format_order(order))

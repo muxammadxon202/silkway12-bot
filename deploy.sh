@@ -24,11 +24,23 @@ cd "$DIR"
 echo "==> 3/4 Настройки (.env)"
 if [ ! -f .env ]; then
   cp .env.example .env
+
   echo
   echo "    Вставь токен бота от @BotFather и нажми Enter:"
   read -r TOK < /dev/tty
   sed -i "s#^BOT_TOKEN=.*#BOT_TOKEN=${TOK}#" .env
-  echo "    .env создан (ALLOWED_ORIGINS и API_DOMAIN уже прописаны)."
+
+  echo
+  echo "    Твой Telegram ID (обязательно — узнать за 5 сек у @userinfobot):"
+  read -r AID < /dev/tty
+  sed -i "s#^ADMIN_ID=.*#ADMIN_ID=${AID}#" .env
+
+  PGPASS="$(openssl rand -base64 24)"
+  sed -i "s#^POSTGRES_PASSWORD=.*#POSTGRES_PASSWORD=${PGPASS}#" .env
+  sed -i "s#^DATABASE_URL=.*#DATABASE_URL=postgresql+asyncpg://silkway:${PGPASS}@db:5432/silkway#" .env
+  chmod 600 .env
+
+  echo "    .env создан (ALLOWED_ORIGINS и API_DOMAIN уже прописаны, пароль БД сгенерирован)."
 else
   echo "    .env уже есть — не трогаю."
 fi
@@ -41,7 +53,7 @@ echo "Жду 45 сек, пока Caddy получит HTTPS-сертификат
 sleep 45
 if curl -fsS https://api.silkway12.uz/health >/dev/null 2>&1; then
   echo "✅ API живой: https://api.silkway12.uz/health отвечает."
-  echo "   Теперь открой бота в Telegram и отправь /start — станешь админом."
+  echo "   Открой бота в Telegram и отправь /start — заявки уже идут на твой ADMIN_ID."
 else
   echo "⚠️  Health пока не отвечает. Обычно это DNS ещё не распространился"
   echo "   или сертификат в процессе. Проверь:"

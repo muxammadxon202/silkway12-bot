@@ -3,5 +3,19 @@
 # Домен берётся из переменной окружения (см. docker-compose.yml → caddy).
 {$API_DOMAIN} {
 	encode gzip
-	reverse_proxy app:8000
+
+	# без этого лимита один POST на сотни МБ читается в память целиком
+	# ещё до pydantic-валидации размера полей
+	request_body {
+		max_size 16KB
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+	}
+
+	reverse_proxy app:8000 {
+		header_up X-Real-IP {remote_host}
+	}
 }
